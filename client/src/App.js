@@ -1,11 +1,11 @@
 import './App.css';
-import Students from './components/students';
+import WeatherList from './components/weatherList';
 
 function App() {
   return (
     <div className="App">
       Hello from Techtonica
-      <Students />
+      <WeatherList/>
     </div>
   );
 }

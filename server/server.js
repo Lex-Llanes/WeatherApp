@@ -1,11 +1,12 @@
 const express = require('express');
 const cors = require('cors');
+const fetch = require('node-fetch');
 require('dotenv').config()
 const db = require('../server/db/db-connection.js'); 
 
 const app = express();
 
-const PORT = 5000;
+const PORT = 8080;
 app.use(cors());
 app.use(express.json());
 
@@ -14,36 +15,49 @@ app.get('/', (req, res) => {
     res.json({ message: 'Hello from My ExpressJS' });
 });
 
-//create the get request
-app.get('/api/students', cors(), async (req, res) => {
-    // const STUDENTS = [
 
-    //     { id: 1, firstName: 'Lisa', lastName: 'Lee' },
-    //     { id: 2, firstName: 'Eileen', lastName: 'Long' },
-    //     { id: 3, firstName: 'Fariba', lastName: 'Dako' },
-    //     { id: 4, firstName: 'Cristina', lastName: 'Rodriguez' },
-    //     { id: 5, firstName: 'Andrea', lastName: 'Trejo' },
-    // ];
-    // res.json(STUDENTS);
-    try{
-        const { rows: students } = await db.query('SELECT * FROM students');
-        res.send(students);
-    } catch (e){
-        return res.status(400).json({e});
+//SIMPLE ROUTE TO LIST OUT 5 DAY WEATHER OF A CITY *the :city is our req.params*
+app.get('/weather/:city', async (req, res) => {
+    try {
+        //We are declaring a city equaling our params and adding it to our fetch url hence the ${city} in the fetch url
+        const { city } = req.params;
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=9b387bf16727c13abb92fc265ba3710c&units=imperial`)
+        const body = await response.json()
+
+        return res.send(body)
+    } catch (error) {
+        console.error(error.message)
     }
-});
+})
 
-//create the POST request
-app.post('/api/students', cors(), async (req, res) => {
-    const newUser = { firstname: req.body.firstname, lastname: req.body.lastname }
-    console.log([newUser.firstname, newUser.lastname]);
-    const result = await db.query(
-        'INSERT INTO students(firstname, lastname) VALUES($1, $2) RETURNING *',
-        [newUser.firstname, newUser.lastname]
-    );
-    console.log(result.rows[0]);
-    res.json(result.rows[0]);
-});
+
+//GET ALL USER DATA
+app.get('/user', async (req, res) => {
+    try {
+        const allUsers = await db.query('SELECT * FROM weatheruser');
+
+        res.json(allUsers.rows)
+    } catch (error) {
+        console.error(error.message)
+    }
+})
+
+
+//UPDATES FAVORITE CITY
+app.put('/user/:name', async (req, res) => {
+    try {
+        const { name } = req.params;
+        const { favCity } = req.body;
+
+        const updateFav = await db.query(
+            'UPDATE weatheruser SET favorite_city = $1 WHERE first_name = $2',
+            [favCity, name]
+        )
+    } catch (error) {
+        console.error(error.message)
+    }
+})
+
 
 // console.log that your server is up and running
 app.listen(PORT, () => {
