@@ -3,7 +3,13 @@ import { React, useState, useEffect } from 'react'
 const WeatherList = () => {
 
     /*Variables for user data and favorite city*/
-    const [user, setUser] = useState([])
+    const [user, setUser] = useState([
+        {
+            user_id: 0,
+            first_name: "",
+            last_name: ""
+        }
+    ])
     const [favCity, setFav] = useState("")
 
     /*Variables for weather data*/
@@ -34,11 +40,16 @@ const WeatherList = () => {
 
 
     //TO ADD FAVORITE CITY
-    async function addCityToFav () {
+    const addCityToFav = async (event) => {
+        event.preventDefault()
+
+        console.log(favCity)
+        console.log(user[0].user_id)
+
         //setFav(userCity)
         try {
-            const body = { userCity };
-            const response = await fetch(`http://localhost:8080/user/${user[0].first_name}`,
+            const body = { favCity };
+            const response = await fetch(`http://localhost:8080/user/${user[0].user_id}`,
                 {
                     method: 'PUT',
                     headers: { "Content-Type": "application/json" },
@@ -64,6 +75,7 @@ const WeatherList = () => {
         setTemp(data.list[0].main.temp)
         setWind(data.list[0].wind.speed)
         setHumid(data.list[0].main.humidity)
+        setFav(data.city.name)
     }
 
     console.log(user);
@@ -99,7 +111,7 @@ const WeatherList = () => {
             <br/>
             <span>Favorite City: {user[0].favorite_city}</span>
             <br/>
-        <button onClick={addCityToFav}></button>
+        <button onClick={addCityToFav}>Add Favorite City</button>
         </div>
 
         <br/>
