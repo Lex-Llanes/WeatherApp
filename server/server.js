@@ -45,11 +45,16 @@ app.get('/user', async (req, res) => {
 
 //UPDATES FAVORITE CITY
 app.put('/user/:id', async (req, res) => {
+    console.log("Success")
     try {
+        //const id = parseInt(req.params.id);
         const { id } = req.params;
         const { favCity } = req.body;
 
+        console.log(req.body);
         const updateFav = await db.query('UPDATE weatheruser SET favorite_city = $1 WHERE user_id = $2', [favCity, id])
+
+        //return res.json(updateFav)
     } catch (error) {
         console.error(error.message)
     }

@@ -41,7 +41,6 @@ const WeatherList = () => {
 
     //TO ADD FAVORITE CITY
     const addCityToFav = async (event) => {
-        event.preventDefault()
 
         console.log(favCity)
         console.log(user[0].user_id)
@@ -56,8 +55,8 @@ const WeatherList = () => {
                     body: JSON.stringify(body)
                 }
             );
-        } catch (error) {
-            console.error(error.message)
+        } catch (err) {
+            console.error(err.message)
         }
 
     }
@@ -86,7 +85,7 @@ const WeatherList = () => {
         <br/>
         <br/>
         <br/>
-            <label>Enter City For Weather</label>
+            <label className="searchheader">Enter City For Weather</label>
             <br/>
             <input 
                 type="text"
@@ -96,7 +95,7 @@ const WeatherList = () => {
             />
             <br/>
 
-            <input 
+            <button data-label="Search"
                 type="submit"
                 value="Submit"
             />
@@ -107,11 +106,11 @@ const WeatherList = () => {
         <br/>
 
         <div>
-            <span>User: {user[0].first_name} {user[0].last_name}</span>
+            <span className="placeholders">User: </span> <span className="datas">{user[0].first_name} {user[0].last_name}</span>
             <br/>
-            <span>Favorite City: {user[0].favorite_city}</span>
+            <span className="placeholders">Favorite City: </span> <span className="datas"> {user[0].favorite_city}</span>
             <br/>
-        <button onClick={addCityToFav}>Add Favorite City</button>
+        <button data-label="Add Favorite City" onClick={addCityToFav} className="button-51">Add Favorite City</button>
         </div>
 
         <br/>
@@ -119,16 +118,16 @@ const WeatherList = () => {
         <br/>
 
 
-        <div className="weatherdetails">
-            <span>City Name: {weatherCity}</span>
+        <div className="card">
+            <span className="placeholders">City Name: </span> <span className="datas">{weatherCity}</span>
             <br/>
-            <span>Skies: {weatherCloud} </span>
+            <span className="placeholders">Skies: </span> <span className="datas"> {weatherCloud} </span>
             <br/>
-            <span>Temperature: {weatherTemp}^F</span>
+            <span className="placeholders">Temperature: </span> <span className="datas"> {weatherTemp}^F</span>
             <br/>
-            <span>Wind: {weatherWind}mph</span>
+            <span className="placeholders">Wind: </span> <span className="datas"> {weatherWind}mph</span>
             <br/>
-            <span>Humidity: {weatherHumid}</span>
+            <span className="placeholders">Humidity: </span> <span className="datas"> {weatherHumid}</span>
             <br/>
         </div>
 
